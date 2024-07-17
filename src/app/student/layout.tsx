@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google"
-import "./globals.css";
 import { cn } from "@/lib/utils";
 import SessionWrapper from "@/components/SessionWrapper";
-import Header from "@/components/header";
+import Header from "../student/components/Header";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,18 +25,8 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable
         )}>
-     {/* <div className="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-100 border-b border-gray-300">
-  <div className="flex items-center mb-4 md:mb-0">
-    <span className="ml-3 text-xl font-semibold">App Name</span>
-  </div> */}
-  {/* <div className="text-gray-600">
-    Instructor name
-  </div> */}
-  {/* <Header/> */}
-{/* </div> */}
-<SessionWrapper>
+       <Header/>
         {children}
-        </SessionWrapper>
         </body>
     </html>
   );
