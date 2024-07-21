@@ -70,8 +70,7 @@ export default function ModulesCard({
         <Separator />
         <div  className="h-fit max-h-[60vh] overflow-y-auto relative">
         {moduleData.map((item: any, index) => (
-          <div
-          className={`${
+          <div key={index} className={`${
             activeModuleId === item.moduleId
               ? "bg-gray-100"
               : "hover:bg-gray-50"

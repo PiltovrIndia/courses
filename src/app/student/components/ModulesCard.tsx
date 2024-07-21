@@ -61,7 +61,7 @@ export default function ModulesCard({
       <Separator />
       <div  className="h-fit max-h-[60vh] overflow-y-auto relative">
       {moduleData.map((item: any, index) => (
-          <div
+          <div key={index}
           className={`${
             activeModuleId === item.moduleId
               ? "bg-gray-100"

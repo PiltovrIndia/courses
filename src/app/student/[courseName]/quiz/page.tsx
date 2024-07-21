@@ -270,7 +270,7 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
                   )
                 ) : (
                   <div className="flex flex-col justify-center items-center h-full">
-                    <p className="text-xl">Click "Start Quiz" to begin.</p>
+                    <p className="text-xl">Click Start Quiz to begin.</p>
                     <Button onClick={handleStartQuiz} className="mt-4">
                       Start Quiz
                     </Button>
