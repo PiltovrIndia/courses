@@ -2,12 +2,12 @@ import db from "../../../../config/db";
 import { NextResponse } from "next/server";
 
 export async function GET(req: any, { params }: any) {
-  const courseId = params.ids[0];
+  const email = params.ids[0];
   try {
     const results = await new Promise((resolve, reject) => {
       db.query(
-        "SELECT * FROM module WHERE courseId = ? ORDER BY timestamp",
-        [courseId],
+        "SELECT * FROM users WHERE email = ?",
+        [email],
         (err: any, data1: []) => {
           if (err) {
             reject(err);

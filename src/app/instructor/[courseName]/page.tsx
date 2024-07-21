@@ -19,10 +19,17 @@ export default function CourseDetails({
   const [topicDetails, setTopicDetails] = useState([]);
   const coursename = course[0];
   const courseId = course[1];
-  const currentModuleId = (id: string) => {
+  const [moduleData, setModuleData] = useState([]);
+  const [currentModuleName, setCurrentModuleName] = useState("");
+  const getModuleData = (data: any) => {
+    setModuleData(data);
+    console.log(data);
+  };
+  const currentModuleId = (id: string,name:string) => {
     setModuleId(id);
     console.log(moduleId);
     setShowTopics(true);
+    setCurrentModuleName(name);
   };
   const currentTopicDetails = async (TopicId: string) => {
     const url = `/api/instructor/get-topic-details/${TopicId}`;
@@ -73,7 +80,15 @@ export default function CourseDetails({
           {/* <Button className="bg-green-600">Save Changes</Button> */}
           <Button
             variant={"default"}
-            onClick={() => router.push(`/instructor/${coursename}/leaderboard`)}
+            onClick={() =>
+              router.push(
+                `/instructor/${
+                  params.courseName +
+                  "@" +
+                  encodeURIComponent(JSON.stringify(moduleData))
+                }/leaderboard`
+              )
+            }
           >
             Leaderboard
           </Button>
@@ -92,13 +107,18 @@ export default function CourseDetails({
       <div className="flex flex-col sm:flex-row space-x-4 px-4">
         <div>
           {" "}
-          <ModulesCard courseId={courseId} currentModuleId={currentModuleId} />
+          <ModulesCard
+            courseId={courseId}
+            currentModuleId={currentModuleId}
+            getModuleData={getModuleData}
+          />
         </div>
 
         <div>
           {showTopics && (
             <TopicsCard
               moduleId={moduleId}
+              moduleName={currentModuleName}
               courseId={courseId}
               currentTopicDetails={currentTopicDetails}
             />

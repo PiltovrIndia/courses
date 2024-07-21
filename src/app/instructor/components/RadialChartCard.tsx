@@ -32,16 +32,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function RadialChartCard() {
+export default function RadialChartCard({parameter,val}:{parameter:any,val:any}) {
   return (
     <div className="h-[25vh] w-[50vh]">
       <Card className="flex flex-row h-full">
         <CardHeader className="flex-shrink-0 pb-0">
           <CardTitle className="font-semibold">
-            <p className="font-semibold">CONFIDENCE</p>
+            <p className="font-semibold">{parameter}</p>
           </CardTitle>
           <CardDescription className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight first:mt-0">
-            75%
+            {val}%
           </CardDescription>
         </CardHeader>
         <CardContent className="flex-grow pb-0">
@@ -51,8 +51,8 @@ export default function RadialChartCard() {
           >
             <RadialBarChart
               data={chartData}
-              startAngle={0}
-              endAngle={250}
+              startAngle={90}
+              endAngle={90-(360*(val/100))}
               innerRadius={80}
               outerRadius={110}
             >
@@ -65,35 +65,6 @@ export default function RadialChartCard() {
               />
               <RadialBar dataKey="visitors" background cornerRadius={10} />
               <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-                <Label
-                  content={({ viewBox }) => {
-                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                      return (
-                        <text
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                        >
-                          <tspan
-                            x={viewBox.cx}
-                            y={viewBox.cy}
-                            className="fill-foreground text-4xl font-bold"
-                          >
-                            {chartData[0].visitors.toLocaleString()}
-                          </tspan>
-                          <tspan
-                            x={viewBox.cx}
-                            y={(viewBox.cy || 0) + 24}
-                            className="fill-muted-foreground"
-                          >
-                            Visitors
-                          </tspan>
-                        </text>
-                      );
-                    }
-                  }}
-                />
               </PolarRadiusAxis>
             </RadialBarChart>
           </ChartContainer>

@@ -6,7 +6,7 @@ export async function GET(req: any, { params }: any) {
   try {
     const results = await new Promise((resolve, reject) => {
       db.query(
-        "SELECT * FROM topic WHERE moduleId = ?",
+        "SELECT * FROM topic WHERE moduleId = ? ORDER BY timestamp",
         [moduleId],
         (err: any, data: []) => {
           if (err) {

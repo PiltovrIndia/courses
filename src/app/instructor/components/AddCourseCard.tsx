@@ -37,6 +37,7 @@ import dayjs from "dayjs";
 import GetId from "@/components/GetId";
 import { ToastAction } from "@/components/ui/toast";
 import { toast, useToast } from "@/components/ui/use-toast";
+import { DialogMessage } from "@/components/dialog";
 export default function AddCourseCard() {
   return (
     <Card className="flex border-slate-300 border-dashed bg-slate-50 w-[40vh] justify-center items-center">
@@ -109,9 +110,10 @@ function SheetComponent() {
           },
         });
         if (response.ok) {
-          console.log("Course Added Successfully!", response);
+          DialogMessage("Success","Course Added Successfully!!");
+        location.reload();
         } else {
-          console.error("failed!", response);
+          DialogMessage("Failed :(","Could Not Add Course! Try Again!!!");
         }
       } catch (error) {
         console.error("Error:", error);

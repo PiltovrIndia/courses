@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET(){
     try {
         const results = await new Promise((resolve, reject) => {
-            db.query("SELECT * FROM course", (err: any, data1: []) => {
+            db.query("SELECT * FROM course ORDER BY timestamp", (err: any, data1: []) => {
                 if(err){
                     reject(err);
                 }else{
@@ -17,6 +17,7 @@ export async function GET(){
         // console.log(results);
         return NextResponse.json({status: 200, message: "Data found",data: results});
     } catch (error) {
+        console.log(error)
         return NextResponse.json(
             { message: error},
             { status: 500}

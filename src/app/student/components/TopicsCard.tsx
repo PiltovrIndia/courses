@@ -1,30 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Plus } from "@/components/icons/plus";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { CheckCircle } from "@/components/icons/check-circle";
 import { Lock } from "@/components/icons/lock";
 import { useEffect, useState } from "react";
 export default function ModuleCard({
   moduleId,
   courseId,
-  currentTopicDetails
+  currentTopicDetails,
+  moduleName
 }: {
   moduleId: string;
   courseId: string;
-  currentTopicDetails : any
+  currentTopicDetails : any;
+  moduleName: string;
 }) {
+  const [activeTopicId, setActiveTopicId] = useState("");
   const [topicData, setTopicData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -50,21 +41,27 @@ export default function ModuleCard({
       }
     }
     fetchData();
-  },[])
+  },[moduleId])
   const handleClick = (id : any) => {
+    setActiveTopicId(id);
     currentTopicDetails(id);
   }
   return (
     <div className="w-96">
-      <Card className="w-96">
-        <p className="text-l text-muted-foreground p-4 font-semibold">TOPICS</p>
+      <Card>
+        <p className="text-l text-muted-foreground p-4 font-semibold">{moduleName} TOPICS</p>
         <Separator />
         <div  className="h-fit max-h-[60vh] overflow-y-auto relative">
         {topicData.map((item:any, index:any) => (
-          <div onClick={() => handleClick(item.topicId)}>
+          <div className={`${
+            activeTopicId === item.topicId
+              ? "bg-gray-100"
+              : "hover:bg-gray-50"
+          }`} onClick={() => handleClick(item.topicId)}>
             <div className="flex flex-row justify-between items-center p-2">
           <p className="font-bold pl-4 pt-2 pb-2">{item.name}</p>
-          <CheckCircle className={item.completed === "yes" ? "text-green-500" : ""} />
+          {item.completed === "yes" ? <CheckCircle/> : <Lock/>}
+          {/* <CheckCircle className={item.completed === "yes" ? "text-green-500" : ""} /> */}
         </div> 
         <Separator />
           </div>

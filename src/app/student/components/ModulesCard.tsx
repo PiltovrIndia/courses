@@ -23,6 +23,7 @@ export default function ModulesCard({
   currentModuleId: any;
 }) {
   const [moduleData, setModuleData] = useState([]);
+  const [activeModuleId,setActiveModuleId] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const url = `/api/instructor/get-modules/${courseId}`;
@@ -47,9 +48,10 @@ export default function ModulesCard({
     };
     fetchData();
   }, []);
-  const handleClick = (id: any) => {
-    currentModuleId(id); //to change value in page.tsx
+  const handleClick = (id: any,name:string) => {
+    currentModuleId(id,name); //to change value in page.tsx
     console.log(id);
+    setActiveModuleId(id);
   };
   return (
     <Card className="w-[45vh] h-auto">
@@ -60,8 +62,12 @@ export default function ModulesCard({
       <div  className="h-fit max-h-[60vh] overflow-y-auto relative">
       {moduleData.map((item: any, index) => (
           <div
-            className="hover:bg-gray-100"
-            onClick={() => handleClick(item.moduleId)}
+          className={`${
+            activeModuleId === item.moduleId
+              ? "bg-gray-100"
+              : "hover:bg-gray-50"
+          }`}
+            onClick={() => handleClick(item.moduleId,item.name)}
           >
             <p className="font-bold pl-4 pt-2">{item.name}</p>
             <p className="text-gray-400 pl-4 pb-2">{item.description}</p>

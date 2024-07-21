@@ -26,17 +26,18 @@ import { useEffect, useState } from "react";
 import { Image } from "@/components/icons/image";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import { DialogMessage } from "@/components/dialog";
 
 export default function CourseCard({
   course,
   courseEnrolled,
   enrolSuccess,
-  activeCollegeId
+  activeCollegeId,
 }: {
   course: any;
   courseEnrolled: any;
   enrolSuccess: any;
-  activeCollegeId: any
+  activeCollegeId: any;
 }) {
   const [name, setName] = useState("");
   const [collegeId, setCollegeId] = useState("");
@@ -66,6 +67,17 @@ export default function CourseCard({
       console.error("Error:", error);
     }
     console.log(session);
+  };
+  const handleViewCourse = () => {
+    if (!session) {
+      DialogMessage("Failed", "Login to View Course");
+    } else {
+      router.push(
+        `/student/${
+          course.name + "@" + course.courseId + "@" + localStorage.getItem("collegeId")
+        }`
+      );
+    }
   };
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -115,7 +127,8 @@ export default function CourseCard({
       </div>
       <p className="p-4">{course.description}</p>
       <CardFooter>
-        {enrolSuccess ? (
+        <Button onClick={handleViewCourse}>View Course</Button>
+        {/* {enrolSuccess ? (
           <Button
             onClick={() =>
               router.push(
@@ -185,7 +198,7 @@ export default function CourseCard({
               </SheetFooter>
             </SheetContent>
           </Sheet>
-        )}
+        )} */}
         {/* <EnrolNow /> */}
       </CardFooter>
     </Card>

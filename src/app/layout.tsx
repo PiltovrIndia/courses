@@ -4,6 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import SessionWrapper from "@/components/SessionWrapper";
 import Header from "@/components/header";
+import { Toaster } from "@/components/ui/sonner";
+
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -38,6 +40,7 @@ export default function RootLayout({
 <SessionWrapper>
         {children}
         </SessionWrapper>
+        <Toaster />
         </body>
     </html>
   );

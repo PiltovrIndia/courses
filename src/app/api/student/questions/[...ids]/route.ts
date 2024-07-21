@@ -1,13 +1,14 @@
 import db from "../../../../config/db";
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
+
 
 export async function GET(req: any, { params }: any) {
-  const courseId = params.ids[0];
+  const topicId = params.ids[0];
   try {
     const results = await new Promise((resolve, reject) => {
       db.query(
-        "SELECT * FROM module WHERE courseId = ? ORDER BY timestamp",
-        [courseId],
+        "SELECT id, topicid, question, option1, option2, option3, option4, correctOption FROM questions WHERE topicid = ?",
+        [topicId],
         (err: any, data1: []) => {
           if (err) {
             reject(err);

@@ -1,20 +1,17 @@
 import db from "../../../../config/db";
 import { NextResponse } from "next/server";
-
 export async function POST(req: any, { params }: any) {
   try {
-    const topicId = params.ids[0];
-    const topicName = params.ids[1];
-    const courseId = params.ids[2];
-    const moduleId = params.ids[3];
-    const links = "";
-    const completed = "no";
-    const token = "";
-    const description = "";
+    const studentid = params.ids[0];
+    const studentname = params.ids[1];
+    const courseid = params.ids[2];
+    const moduleid = params.ids[3];
+    const topicid = params.ids[4];
+    const score = params.ids[5];
     const result = await new Promise((resolve, reject) => {
       db.query(
-        "INSERT INTO `topic`(`topicId`, `name`, `description`,`courseId`,`moduleId`,`links`,`completed`,`token`) VALUES (?,?,?,?,?,?,?,?)",
-        [topicId,topicName,description,courseId,moduleId,links,completed,token],
+        "INSERT INTO performance (studentid, studentname, courseid, moduleid, topicid, score) VALUES (?,?,?,?,?,?)",
+        [studentid,studentname,courseid,moduleid,topicid,score],
         (err: any, result: any) => {
           if (err) {
             reject(err);
@@ -25,10 +22,10 @@ export async function POST(req: any, { params }: any) {
       );
     });
 
-    console.log("New topic added:", result);
+    console.log("Feedback added:", result);
 
     return NextResponse.json(
-      { message: "User inserted successfully" },
+      { message: "Feedback successfully added" },
       { status: 200 }
     );
   } catch (error) {

@@ -4,17 +4,11 @@ import { NextResponse } from "next/server";
 export async function POST(req: any, { params }: any) {
   try {
     const topicId = params.ids[0];
-    const topicName = params.ids[1];
-    const courseId = params.ids[2];
-    const moduleId = params.ids[3];
-    const links = "";
-    const completed = "no";
-    const token = "";
-    const description = "";
+    const enable = 1;
     const result = await new Promise((resolve, reject) => {
       db.query(
-        "INSERT INTO `topic`(`topicId`, `name`, `description`,`courseId`,`moduleId`,`links`,`completed`,`token`) VALUES (?,?,?,?,?,?,?,?)",
-        [topicId,topicName,description,courseId,moduleId,links,completed,token],
+        "UPDATE `topic` SET `enableQuiz` = ? WHERE `topicId` = ?",
+        [enable, topicId],
         (err: any, result: any) => {
           if (err) {
             reject(err);
@@ -25,10 +19,10 @@ export async function POST(req: any, { params }: any) {
       );
     });
 
-    console.log("New topic added:", result);
+    console.log("topic completed", result);
 
     return NextResponse.json(
-      { message: "User inserted successfully" },
+      { message: "topic completed" },
       { status: 200 }
     );
   } catch (error) {

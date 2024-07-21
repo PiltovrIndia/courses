@@ -2,8 +2,17 @@
 import { Button } from "@/components/ui/button";
 import LeaderboardTable from "../../components/LeaderboardTable";
 import  RadialChartCard  from "../../components/RadialChartCard";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function Leaderboard() {
+  const {data : session,status} = useSession();
+  const router = useRouter();
+  useEffect(()=>{
+    if(status !== "authenticated")
+      router.push("/student");
+  },[])
   return (
     <div>
       <div className="flex flex-row p-4 space-x-4 space-y-3">
