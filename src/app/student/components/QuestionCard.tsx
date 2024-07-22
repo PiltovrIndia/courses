@@ -27,10 +27,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 }) => {
   return (
     <Card className="mb-4 p-4 flex-grow border-4 border-blue-500">
-      <CardHeader className="text-2xl font-bold">{`Question ${currentIndex + 1}`}</CardHeader>
+      <CardHeader className="text-xl lg:text-2xl font-bold">Question {currentIndex + 1}</CardHeader>
       <CardContent>
-        <h2 className="text-xl font-semibold mb-4">{question}</h2>
-        <div className='space-y-4'>
+        <h2 className="text-lg lg:text-xl font-semibold mb-4">{question}</h2>
+        <div>
           {options.map((option, index) => (
             <OptionCard
               key={index}

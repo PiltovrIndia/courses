@@ -50,7 +50,7 @@ useEffect(() => {
       </div>
       <div className="flex flex-col sm:flex-row p-10 space-x-10">
         {courseData.map((item: any, index) => (
-          <ViewCourseCard course={item} />
+          <ViewCourseCard key={index} course={item} />
         ))}
         <AddCourseCard />
       </div>

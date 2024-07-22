@@ -14,7 +14,7 @@ const OptionCard: React.FC<OptionCardProps> = ({ option, selectedOption, onSelec
   };
 
   return (
-    <Card className={`p-4 cursor-pointer ${selectedOption === option.split(',')[0] ? 'bg-blue-500 text-white' : ''}`} onClick={handleClick}>
+    <Card className={`p-4 cursor-pointer ${selectedOption === option.split(',')[0] ? 'bg-blue-500 text-white' : 'bg-white-300'}`} onClick={handleClick}>
       {option.split(',')[1]} {/* Display the option text */}
     </Card>
   );

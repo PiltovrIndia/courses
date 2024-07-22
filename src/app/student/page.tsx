@@ -4,16 +4,18 @@ import CourseCard from "./components/CourseCard";
 import { useSession, signOut } from "next-auth/react";
 import { DialogMessage } from "@/components/dialog";
 export default function Student() {
-  const { data: session } = useSession();
+  const { data: session,status } = useSession();
   const [coursesData, setCoursesData] = useState([]);
   const [onlyCourse, setOnlyCourse] = useState(null);
   const [collegeId, setCollegeId] = useState("");
   const [enrolSuccess, setEnrolSuccess] = useState(session ? true : false);
   const [attendees, setAttendees] = useState<any[]>([]);
   const [courseIndex, setCourseIndex] = useState<number>();
-  console.log(session);
   useEffect(() => {
     const fetchCourseData = async () => {
+      if(!session){
+        setEnrolSuccess(false);
+      }
       const url = `/api/instructor/get-courses`;
       try {
         const response = await fetch(url, {
@@ -65,7 +67,6 @@ export default function Student() {
       }
     };
     if (session && !enrolSuccess) fetchStudentData(session?.user?.email);
-    if(!session) setEnrolSuccess(false);
   }, [session]);
   //   useEffect(() => {
   //   const fetchAttendeesData = async () => {

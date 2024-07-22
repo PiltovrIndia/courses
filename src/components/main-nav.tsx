@@ -8,7 +8,7 @@ import { Button } from "./ui/button"
 export function MainNav() {
   return (
     <div className="flex gap-4 items-center">
-     App Name
+     Smart Courses
     </div>
   )
 }

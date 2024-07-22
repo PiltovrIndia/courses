@@ -64,13 +64,21 @@ export default function TopicDetailsCard({
       const len = commits.items.length;
       const reqMessage = "ComponentsFSD2024";
       if (commits && len > 0) {
-        const LastCommit = commits.items[len - 1];
-        const LastMessage = LastCommit.commit.message;
-        if (LastMessage === reqMessage) {
-          setIsCommitted(true);
-        } else {
+        const allCommits = commits.items;
+        let i = 0;
+        for(i = 0;i < len;i++){
+          const commitMessage = allCommits[i].commit.message;
+          if (commitMessage === reqMessage) {
+            setIsCommitted(true);
+            break;
+          }
+        }
+        if(i === len) {
           DialogMessage("Failed", "Verify the commit message and try again");
         }
+      }
+      else{
+        DialogMessage("Failed","Please Commit and Try Again")
       }
     }
     // if(commits.status === 200)
@@ -94,6 +102,12 @@ export default function TopicDetailsCard({
     console.log(isCommitted);
     console.log(understand);
     console.log(confidence);
+    if(!isCommitted)
+      DialogMessage("Failed to save feedback","Your commit is not verified, please try again");
+    if(!understand)
+      DialogMessage("Failed to save feedback","Select Option for Did you understand topic?");
+    if(!confidence)
+      DialogMessage("Failed to save feedback","Select Option for How confident are you with this topic?");
     if (isCommitted && understand && confidence) {
       const url = `/api/student/add-feedback/${collegeId}/${topicDetails[0].topicId}/${confidence}/${isCommitted}/${understand}`;
       try {
@@ -111,8 +125,8 @@ export default function TopicDetailsCard({
       } catch (error) {
         console.error("Error:", error);
       }
-      alert("saved successfully");
-    } else alert("enter all the fields to save your feedback");
+      DialogMessage("Success","Your Feedback Saved Successfully!!")
+    }
   };
   useEffect(() => {
     setCompleted(topicDetails[0].completed === "yes");
@@ -233,7 +247,7 @@ export default function TopicDetailsCard({
                   <p className="text-orange-500 font-semibold text-sm p-2">
                     Create a public Github repository and commit your topic
                     related project code. Use the commit message
-                    “ComponentsFSD2024” while committing.
+                    “{topicDetails[0].token}” while committing.
                   </p>
                 </div>
                 <Label htmlFor="username" className="text-left">

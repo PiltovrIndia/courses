@@ -7,9 +7,9 @@ export async function POST(req: any, { params }: any) {
     const topicName = params.ids[1];
     const courseId = params.ids[2];
     const moduleId = params.ids[3];
+    const token = params.ids[4];
     const links = "";
     const completed = "no";
-    const token = "";
     const description = "";
     const result = await new Promise((resolve, reject) => {
       db.query(

@@ -199,15 +199,11 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-500 relative">
-      <div className="w-2/3 flex flex-col items-center">
+    <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-blue-500 relative">
+      <div className="lg:w-2/3 w-full flex flex-col items-center">
         <Card className="w-full mb-4 p-4 text-center relative">
-          <div className="flex flex-row space-x-4">
-            {/* <Button variant={"outline"} onClick={() => router.back()}>
-              <ArrowLeft />
-              <p className="pl-2">Go Back</p>
-            </Button> */}
-           { score === null ?<AlertDialog>
+          <div className="flex items-center justify-between">
+          { score === null ?<AlertDialog>
               <AlertDialogTrigger> <ArrowLeft />
               <p className="pl-2">Go Back</p></AlertDialogTrigger>
               <AlertDialogContent>
@@ -230,22 +226,21 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
             <p className="pl-2">Go Back</p>
           </Button>
             }
-
-            <h1 className="text-3xl font-bold text-red-500">
-              Course:{courseName} Topic:{topicName}
+            <h1 className="text-xl font-bold text-black flex-1 text-center">
+              Course Name :{courseName} Topic name : {topicName}
             </h1>
+            {hasStarted && (
+              <div className="text-xl font-bold text-black ml-4">
+                {Math.floor(timeLeft / 60)}:
+                {timeLeft % 60 < 10 ? `0${timeLeft % 60}` : timeLeft % 60}
+              </div>
+            )}
           </div>
-          {hasStarted && (
-            <div className="text-xl absolute top-4 right-4">
-              {Math.floor(timeLeft / 60)}:
-              {timeLeft % 60 < 10 ? `0${timeLeft % 60}` : timeLeft % 60}
-            </div>
-          )}
         </Card>
-        <div className="flex w-full h-[calc(100vh-8rem)]">
+        <div className="flex flex-col lg:flex-row w-full h-full lg:h-[calc(100vh-8rem)]">
           {score === null ? (
             <>
-              <div className="flex-1 flex flex-col bg-white p-4 rounded-md shadow-lg h-full">
+              <div className="flex-1 flex flex-col bg-white p-4 rounded-md shadow-lg">
                 {hasStarted ? (
                   questions.length > 0 ? (
                     <QuestionCard
@@ -270,7 +265,7 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
                   )
                 ) : (
                   <div className="flex flex-col justify-center items-center h-full">
-                    <p className="text-xl">Click "Start Quiz" to begin.</p>
+                    <p className="text-xl">Click Start Quiz to begin.</p>
                     <Button onClick={handleStartQuiz} className="mt-4">
                       Start Quiz
                     </Button>

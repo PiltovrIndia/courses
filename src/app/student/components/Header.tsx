@@ -6,7 +6,7 @@ export default async function Header() {
   return (
     <div className="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-100 border-b border-gray-300">
       <div className="flex items-center mb-4 md:mb-0">
-        <span className="ml-3 text-xl font-semibold">App Name</span>
+        <span className="ml-3 text-xl font-semibold">Smart Courses</span>
       </div>
       {/* <div className="text-gray-600">Instructor name</div> */}
       {!session?.user ? (

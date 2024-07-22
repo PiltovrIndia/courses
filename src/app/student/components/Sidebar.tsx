@@ -21,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ questions = [], currentIndex, onChang
   };
 
   return (
-    <Card className="w-1/3 h-full p-4 flex flex-col items-center">
+    <Card className="w-full lg:w-1/3 h-full p-4 flex flex-col items-center">
       <CardContent className="flex flex-wrap items-center mb-4">
         {Array.isArray(questions) && questions.map((_, index) => {
           let bgColor = 'bg-gray-300';

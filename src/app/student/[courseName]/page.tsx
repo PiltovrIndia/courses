@@ -23,9 +23,10 @@ export default function CourseDetails({
   const courseId = course[1];
   const collegeId = course[2];
   useEffect(()=>{
+    console.log(session);
     if(status !== "authenticated")
       router.push("/student");
-  },[])
+  },[session])
   const currentModuleId = (id: string,name:string) => {
     setModuleId(id);
     console.log(moduleId);

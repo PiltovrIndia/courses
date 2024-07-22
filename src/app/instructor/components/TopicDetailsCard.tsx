@@ -310,7 +310,7 @@ function QuizStats({ topicId }: { topicId: string }) {
           </TableHeader>
           <TableBody>
             {scoreData.map((item: any, index) => (
-              <TableRow>
+            <TableRow key={index}>
                 <TableCell>{item.studentid}</TableCell>
                 <TableCell>{item.score}</TableCell>
               </TableRow>

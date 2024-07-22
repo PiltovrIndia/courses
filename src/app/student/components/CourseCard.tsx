@@ -27,7 +27,6 @@ import { Image } from "@/components/icons/image";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { DialogMessage } from "@/components/dialog";
-
 export default function CourseCard({
   course,
   courseEnrolled,
@@ -42,32 +41,32 @@ export default function CourseCard({
   const [name, setName] = useState("");
   const [collegeId, setCollegeId] = useState("");
   const [email, setEmail] = useState("");
-  const { data: session } = useSession();
+  const { data: session,status } = useSession();
   // const [attendees,setAttendees] = useState<any[]>([]);
   const router = useRouter();
-  console.log(collegeId);
-  console.log(session);
-  const handleLogin = async () => {
-    const url = `/api/student/add-attendee/${name}/${collegeId}/${email}/${session?.user?.name}/${course.courseId}`;
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        console.log("Attendee Added Successfully!", response);
-        courseEnrolled(course.courseId);
-        alert("Attendee Added Successfully!");
-      } else {
-        console.error("failed!", response);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-    console.log(session);
-  };
+  // console.log(collegeId);
+  // console.log(session);
+  // const handleLogin = async () => {
+  //   const url = `/api/student/add-attendee/${name}/${collegeId}/${email}/${session?.user?.name}/${course.courseId}`;
+  //   try {
+  //     const response = await fetch(url, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     if (response.ok) {
+  //       console.log("Attendee Added Successfully!", response);
+  //       courseEnrolled(course.courseId);
+  //       alert("Attendee Added Successfully!");
+  //     } else {
+  //       console.error("failed!", response);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  //   console.log(session);
+  // };
   const handleViewCourse = () => {
     if (!session) {
       DialogMessage("Failed", "Login to View Course");
@@ -78,7 +77,24 @@ export default function CourseCard({
         }`
       );
     }
-  };
+  }  
+  useEffect(()=>{
+    console.log(session);
+  },[session])
+    // while (status === 'loading') {
+    //   await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 500ms before checking again
+    // }
+  
+    // if (!enrolSuccess) {
+    //   DialogMessage("Failed", "Login to View Course");
+    // } else {
+    //   router.push(
+    //     `/student/${
+    //       course.name + "@" + course.courseId + "@" + localStorage.getItem("collegeId")
+    //     }`
+    //   );
+    // }
+  // };
   // useEffect(() => {
   //   const fetchData = async () => {
   //     const url = `/api/student/get-attendees`;

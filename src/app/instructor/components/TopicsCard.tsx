@@ -123,7 +123,7 @@ export default function TopicsCard({
         <Separator />
         <div className="h-fit max-h-[60vh] overflow-y-auto relative">
           {topicsData.map((item: any, index) => (
-            <div
+         <div key={index}
               className={`${
                 activeTopicId === item.topicId
                   ? "bg-gray-100"
@@ -163,8 +163,9 @@ function AddTopicDialog({
 }) {
   const topicId = GetId("t");
   const [topicName, setTopicName] = useState("");
+  const token = GetId("COMMIT");
   const handleSubmit = async () => {
-    const url = `/api/instructor/add-topic/${topicId}/${topicName}/${courseId}/${moduleId}`;
+    const url = `/api/instructor/add-topic/${topicId}/${topicName}/${courseId}/${moduleId}/${token}`;
     try {
       const response = await fetch(url, {
         method: "POST",
