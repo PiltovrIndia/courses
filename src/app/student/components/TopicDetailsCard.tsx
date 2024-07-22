@@ -62,7 +62,7 @@ export default function TopicDetailsCard({
       DialogMessage("Failed", "Verify the repo name and try again");
     } else {
       const len = commits.items.length;
-      const reqMessage = "ComponentsFSD2024";
+      const reqMessage = topicDetails[0].token;
       if (commits && len > 0) {
         const allCommits = commits.items;
         let i = 0;
