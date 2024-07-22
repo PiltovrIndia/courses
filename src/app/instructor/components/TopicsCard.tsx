@@ -123,7 +123,7 @@ export default function TopicsCard({
         <Separator />
         <div className="h-fit max-h-[60vh] overflow-y-auto relative">
           {topicsData.map((item: any, index) => (
-         <div key={index}
+            <div key={index}
               className={`${
                 activeTopicId === item.topicId
                   ? "bg-gray-100"
