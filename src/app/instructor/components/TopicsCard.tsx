@@ -248,7 +248,7 @@ export const calModuleFeedback = async (topicsData: any) => {
       implementation += (await resp).implementation;
       understand += (await resp).understand;
       confidence += (await resp).confidence;
-      studentTopicCount += (await resp).studentTopicCount;
+      studentTopicCount = (await resp).studentTopicCount;
       respondantsCount += (await resp).respondantsCount;
       completeCount += 1;
     }

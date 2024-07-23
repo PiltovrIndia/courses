@@ -179,19 +179,19 @@ export default function TopicDetailsCard({
               <div className="px-4">
                 <p className="font-semibold">CONFIDENCE</p>
                 <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                  {feedback && feedback.confidence}%
+                  {feedback && Math.floor(feedback.confidence)}%
                 </h2>
               </div>
               <div className="px-4">
                 <p className="font-semibold">IMPLEMENTATION</p>
                 <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                  {feedback && feedback.implementation}%
+                  {feedback && Math.floor(feedback.implementation)}%
                 </h2>
               </div>
               <div className="px-4">
                 <p className="font-semibold">UNDERSTOOD</p>
                 <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                  {feedback && feedback.understand}%
+                  {feedback && Math.floor(feedback.understand)}%
                 </h2>
               </div>
             </div>
