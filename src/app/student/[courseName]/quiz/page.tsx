@@ -75,7 +75,7 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
         });
         const resp = await response.json();
         if (response.status === 200) {
-          console.log("Questions retrieval successful!", resp.data);
+          // console.log("Questions retrieval successful!", resp.data);
           setQuestions(resp.data);
           setAttempted(new Array(resp.data.length).fill(false));
         } else {
