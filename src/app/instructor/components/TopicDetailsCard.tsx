@@ -165,7 +165,7 @@ export default function TopicDetailsCard({
       </div>
       <Separator />
       <div className="h-fit max-h-[63.5vh] overflow-y-auto relative">
-        {(isMarked && feedback?.respondantsCount !== 0) && (
+        {(isMarked ) && (
           <div>
             <div className="flex flex-row">
               <p className="px-4 py-2">TOPIC STATS</p>

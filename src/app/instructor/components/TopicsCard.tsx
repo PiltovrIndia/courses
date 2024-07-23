@@ -76,45 +76,51 @@ export default function TopicsCard({
     <div className="space-y-3">
       {
         //
-        feedback && feedback.completeCount > 0 && feedback.respondantsCount !== 0 && (
-          <Card className="w-[60vh] h-auto">
-            <div>
-              <div className="flex flex-row">
-                <p className="px-4 py-2">MODULE STATS</p>
-                <p className="px-4 py-2">
-                  RESPONDANTS: {feedback.respondantsCount}/
-                  {feedback.studentTopicCount} (
-                  {Math.floor(feedback.implementation / feedback.completeCount)}
-                  %)
-                </p>
-              </div>
-              <Separator />
-              <div className="flex flex-row justify-between">
-                <div className="px-4">
-                  <p className="font-semibold">CONFIDENCE</p>
-                  <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                    {Math.floor(feedback.confidence / feedback.completeCount)}%
-                  </h2>
-                </div>
-                <div className="px-4">
-                  <p className="font-semibold">IMPLEMENTATION</p>
-                  <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+        feedback &&
+          feedback.completeCount > 0 &&
+          feedback.respondantsCount !== 0 && (
+            <Card className="w-[60vh] h-auto">
+              <div>
+                <div className="flex flex-row">
+                  <p className="px-4 py-2">MODULE STATS</p>
+                  <p className="px-4 py-2">
+                    RESPONDANTS: {feedback.respondantsCount}/
+                    {feedback.studentTopicCount} (
                     {Math.floor(
                       feedback.implementation / feedback.completeCount
                     )}
-                    %
-                  </h2>
+                    %)
+                  </p>
                 </div>
-                <div className="px-4">
-                  <p className="font-semibold">UNDERSTOOD</p>
-                  <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                    {Math.floor(feedback.understand / feedback.completeCount)}%
-                  </h2>
+                <Separator />
+                <div className="flex flex-row justify-between">
+                  <div className="px-4">
+                    <p className="font-semibold">CONFIDENCE</p>
+                    <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                      {Math.floor(feedback.confidence / feedback.completeCount)}
+                      %
+                    </h2>
+                  </div>
+                  <div className="px-4">
+                    <p className="font-semibold">IMPLEMENTATION</p>
+                    <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                      {Math.floor(
+                        feedback.implementation / feedback.completeCount
+                      )}
+                      %
+                    </h2>
+                  </div>
+                  <div className="px-4">
+                    <p className="font-semibold">UNDERSTOOD</p>
+                    <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                      {Math.floor(feedback.understand / feedback.completeCount)}
+                      %
+                    </h2>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Card>
-        )
+            </Card>
+          )
       }
       <Card className="w-[60vh] h-auto">
         <p className="text-l text-muted-foreground p-4 font-semibold">
@@ -123,7 +129,8 @@ export default function TopicsCard({
         <Separator />
         <div className="h-fit max-h-[60vh] overflow-y-auto relative">
           {topicsData.map((item: any, index) => (
-            <div key={index}
+            <div
+              key={index}
               className={`${
                 activeTopicId === item.topicId
                   ? "bg-gray-100"
@@ -245,12 +252,14 @@ export const calModuleFeedback = async (topicsData: any) => {
   for (let i = 0; i < len; i++) {
     if (topicsData[i].completed === "yes") {
       const resp = calculateFeedback(true, topicsData[i].topicId);
-      implementation += (await resp).implementation;
-      understand += (await resp).understand;
-      confidence += (await resp).confidence;
-      studentTopicCount = (await resp).studentTopicCount;
-      respondantsCount += (await resp).respondantsCount;
-      completeCount += 1;
+      if ((await resp).respondantsCount !== 0) {
+        implementation += (await resp).implementation;
+        understand += (await resp).understand;
+        confidence += (await resp).confidence;
+        studentTopicCount = (await resp).studentTopicCount;
+        respondantsCount += (await resp).respondantsCount;
+        completeCount += 1;
+      }
     }
   }
   return {

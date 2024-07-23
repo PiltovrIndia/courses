@@ -1,9 +1,9 @@
 export const calculateFeedback = async (isMarked: any, topicId: any) => {
     var feedback: any[] = [];
     let studentTopicCount = 0;
-    let confidence = -1;
-    let understand = -1;
-    let implementation = -1;
+    let confidence = 0;
+    let understand = 0;
+    let implementation = 0;
   
     const fetchFeedbackData = async () => {
       const url = `/api/instructor/get-feedback/${topicId}`;
@@ -62,6 +62,8 @@ export const calculateFeedback = async (isMarked: any, topicId: any) => {
   
     const calConfidence = (data: any) => {
       const len = data.length;
+      if(len === 0)
+        return;
       let confidenceSum = 0;
       for (let i = 0; i < len; i++) confidenceSum += data[i].confidence;
       let avgPercentile = ((confidenceSum /  len) / 5)*100 ;
@@ -72,6 +74,9 @@ export const calculateFeedback = async (isMarked: any, topicId: any) => {
       let ycnt = 0;
       let mcnt = 0;
       const len = data.length;
+      if(len === 0){
+        return;
+      }
       for (let i = 0; i < len; i++) {
         if (data[i].understand === "yes") ycnt++;
         else if(data[i].understand === "may-be") mcnt++;
