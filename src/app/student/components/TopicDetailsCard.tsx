@@ -14,11 +14,11 @@ import { useRouter } from "next/navigation";
 export default function TopicDetailsCard({
   topicDetails,
   collegeId,
-  courseName
+  courseName,
 }: {
   topicDetails: any;
   collegeId: string;
-  courseName: string
+  courseName: string;
 }) {
   const router = useRouter();
   const [completed, setCompleted] = useState(false);
@@ -27,7 +27,9 @@ export default function TopicDetailsCard({
   const { data: session } = useSession();
   const GitUserName = session?.user?.name;
   const [isCommitted, setIsCommitted] = useState(false);
-  const [enableQuiz,setEnableQuiz] = useState(topicDetails[0].enableQuiz === 1);
+  const [enableQuiz, setEnableQuiz] = useState(
+    topicDetails[0].enableQuiz === 1
+  );
   const [understand, setUnderstand] = useState<string | null>(null);
   const [confidence, setConfidence] = useState<string | null>(null);
   const description = topicDetails[0].description;
@@ -40,10 +42,60 @@ export default function TopicDetailsCard({
     topicDetails[0].links !== "" ? topicDetails[0].links.split(",") : []
   );
   const verifyCommit = async () => {
-    // console.log(process.env.GITHUB_TOKEN)
-    console.log(session);
-    const startDate = dayjs().format("YYYY-MM-DD") + "T00:00:00Z";
-    const endDate = dayjs().format("YYYY-MM-DD") + "T23:59:59Z";
+    const startDate =
+      dayjs(localStorage.getItem("startDate")).format("YYYY-MM-DD") +
+      "T00:00:00Z";
+    const endDate =
+      dayjs(localStorage.getItem("endDate")).format("YYYY-MM-DD") +
+      "T23:59:59Z";
+    const url = `https://api.github.com/repos/${GitUserName}/${repoName}/commits?since=${startDate}&until=${endDate}`;
+    // console.log(url);
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        alert("Repo not found, verify repo name and try again!!")
+        DialogMessage(
+          "Not Found!",
+          "Repo not found, verify repo and try again!!"
+        );
+      } else {
+        const commits = await response.json();
+        // Filter commits where the author is the same as the owner
+        const filteredCommits = commits.filter(
+          (commit: { author: { login: any } }) => {
+            const author = commit.author ? commit.author.login : null;
+            return author === GitUserName;
+          }
+        );
+        // console.log(filteredCommits[0].commit.message);
+        const reqMessage = topicDetails[0].token;
+        const len = filteredCommits.length;
+        if (len > 0) {
+          let i = 0;
+          for (i = 0; i < len; i++) {
+            // console.log(filteredCommits[i].commit.message);
+            if (filteredCommits[i].commit.message === reqMessage) {
+              setIsCommitted(true);
+              break;
+            }
+          }
+          if (isCommitted) {
+            alert("Verify the commit message and try again");
+            DialogMessage("Failed", "Verify the commit message and try again");
+          }
+        } else {
+          alert("Please Commit with your account and Try Again")
+          DialogMessage("Failed", "Please Commit and Try Again");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    // console.log(process.env.GITHUB_TOKEN);
+    // console.log(session);
+    // const startDate = dayjs(localStorage.getItem("startDate")).format("YYYY-MM-DD") + "T00:00:00Z";
+    // const endDate = dayjs(localStorage.getItem("endDate")).format("YYYY-MM-DD") + "T23:59:59Z";
     //     const url = `https://api.github.com/search/commits?q=repo:${GitUserName}/${repoName}+author:${GitUserName}+committer-date:${startDate}..${endDate}
     // `;
     //     const headers = {
@@ -52,35 +104,34 @@ export default function TopicDetailsCard({
     //     };
 
     // const response = await fetch(url, { headers });
-    const response =
-      await fetch(`https://api.github.com/search/commits?q=repo:${GitUserName}/${repoName}+author:${GitUserName}+committer-date:${startDate}..${endDate}
+    //     const response =
+    //       await fetch(`https://api.github.com/search/commits?q=repo:${GitUserName}/${repoName}+author:${GitUserName}+committer-date:${startDate}..${endDate}
 
-`);
-    const commits = await response.json();
-    console.log(commits);
-    if (!response.ok) {
-      DialogMessage("Failed", "Verify the repo name and try again");
-    } else {
-      const len = commits.items.length;
-      const reqMessage = topicDetails[0].token;
-      if (commits && len > 0) {
-        const allCommits = commits.items;
-        let i = 0;
-        for(i = 0;i < len;i++){
-          const commitMessage = allCommits[i].commit.message;
-          if (commitMessage === reqMessage) {
-            setIsCommitted(true);
-            break;
-          }
-        }
-        if(i === len) {
-          DialogMessage("Failed", "Verify the commit message and try again");
-        }
-      }
-      else{
-        DialogMessage("Failed","Please Commit and Try Again")
-      }
-    }
+    // `);
+    //     const commits = await response.json();
+    //     console.log(commits);
+    //     if (!response.ok) {
+    //       DialogMessage("Failed", "Verify the repo name and try again");
+    //     } else {
+    //       const len = commits.items.length;
+    //       const reqMessage = topicDetails[0].token;
+    //       if (commits && len > 0) {
+    //         const allCommits = commits.items;
+    //         let i = 0;
+    //         for (i = 0; i < len; i++) {
+    //           const commitMessage = allCommits[i].commit.message;
+    //           if (commitMessage === reqMessage) {
+    //             setIsCommitted(true);
+    //             break;
+    //           }
+    //         }
+    //         if (i === len) {
+    //           DialogMessage("Failed", "Verify the commit message and try again");
+    //         }
+    //       } else {
+    //         DialogMessage("Failed", "Please Commit and Try Again");
+    //       }
+    //     }
     // if(commits.status === 200)
     // {const len = commits.items.length;
     // const reqMessage = "ComponentsFSD2024";
@@ -102,12 +153,21 @@ export default function TopicDetailsCard({
     console.log(isCommitted);
     console.log(understand);
     console.log(confidence);
-    if(!isCommitted)
-      DialogMessage("Failed to save feedback","Your commit is not verified, please try again");
-    if(!understand)
-      DialogMessage("Failed to save feedback","Select Option for Did you understand topic?");
-    if(!confidence)
-      DialogMessage("Failed to save feedback","Select Option for How confident are you with this topic?");
+    if (!isCommitted)
+      DialogMessage(
+        "Failed to save feedback",
+        "Your commit is not verified, please try again"
+      );
+    if (!understand)
+      DialogMessage(
+        "Failed to save feedback",
+        "Select Option for Did you understand topic?"
+      );
+    if (!confidence)
+      DialogMessage(
+        "Failed to save feedback",
+        "Select Option for How confident are you with this topic?"
+      );
     if (isCommitted && understand && confidence) {
       const url = `/api/student/add-feedback/${collegeId}/${topicDetails[0].topicId}/${confidence}/${isCommitted}/${understand}`;
       try {
@@ -125,13 +185,16 @@ export default function TopicDetailsCard({
       } catch (error) {
         console.error("Error:", error);
       }
-      DialogMessage("Success","Your Feedback Saved Successfully!!")
+      DialogMessage("Success", "Your Feedback Saved Successfully!!");
     }
   };
   useEffect(() => {
     setCompleted(topicDetails[0].completed === "yes");
     setEnableQuiz(topicDetails[0].enableQuiz === 1);
-    setLinks(topicDetails[0].links !== "" ? topicDetails[0].links.split(",") : []);
+    setLinks(
+      topicDetails[0].links !== "" ? topicDetails[0].links.split(",") : []
+    );
+    setIsCommitted(false);
   }, [topicDetails]);
   // const openQuiz = () => {
 
@@ -246,8 +309,8 @@ export default function TopicDetailsCard({
                 <div className="rounded bg-orange-100">
                   <p className="text-orange-500 font-semibold text-sm p-2">
                     Create a public Github repository and commit your topic
-                    related project code. Use the commit message
-                    “{topicDetails[0].token}” while committing.
+                    related project code. Use the commit message “
+                    {topicDetails[0].token}” while committing.
                   </p>
                 </div>
                 <Label htmlFor="username" className="text-left">
@@ -302,9 +365,25 @@ export default function TopicDetailsCard({
           </div>
         </div>
         <Separator />
-       {enableQuiz && <div className="flex justify-center p-2">
-          <Button onClick={() => router.push(`/student/${courseName+"@"+topicDetails[0].topicId+"@"+topicDetails[0].name}/quiz`)}>Attempt Quiz</Button>
-        </div>}
+        {enableQuiz && (
+          <div className="flex justify-center p-2">
+            <Button
+              onClick={() =>
+                router.push(
+                  `/student/${
+                    courseName +
+                    "@" +
+                    topicDetails[0].topicId +
+                    "@" +
+                    topicDetails[0].name
+                  }/quiz`
+                )
+              }
+            >
+              Attempt Quiz
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );

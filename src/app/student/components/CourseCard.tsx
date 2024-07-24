@@ -67,10 +67,12 @@ export default function CourseCard({
   //   }
   //   console.log(session);
   // };
-  const handleViewCourse = () => {
+  const handleViewCourse = (start:any,end:any) => {
     if (!session) {
       DialogMessage("Failed", "Login to View Course");
     } else {
+      localStorage.setItem("startDate",start);
+      localStorage.setItem("endDate",end);
       router.push(
         `/student/${
           course.name + "@" + course.courseId + "@" + localStorage.getItem("collegeId")
@@ -143,7 +145,7 @@ export default function CourseCard({
       </div>
       <p className="p-4">{course.description}</p>
       <CardFooter>
-        <Button onClick={handleViewCourse}>View Course</Button>
+        <Button onClick={() => handleViewCourse(course.start,course.end)}>View Course</Button>
         {/* {enrolSuccess ? (
           <Button
             onClick={() =>

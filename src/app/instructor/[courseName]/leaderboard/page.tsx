@@ -18,9 +18,9 @@ export default function Leaderboard({
   const [implementation, setImplementation] = useState(0);
   const [understand, setUnderstand] = useState(0);
   const [confidence, setConfidence] = useState(0);
+  const [total,setTotal] = useState(0);
   useEffect(() => {
     const fetchTopicData = async (i: any) => {
-      let count = 0;
       const url = `/api/instructor/get-topics/${moduleData[i].moduleId}`;
       try {
         const response = await fetch(url, {
@@ -34,10 +34,12 @@ export default function Leaderboard({
         if (response.status === 200) {
           console.log("Topic Data retrieval successfull!", resp.data);
           const response = calModuleFeedback(resp.data);
-          if((await response).completeCount > 0){
+          if((await response).completeCount > 0 ){
             setImplementation(implementation+(await response).implementation);
             setUnderstand(understand+(await response).understand);
             setConfidence(confidence+(await response).confidence);
+            setTotal(total+(await response).completeCount);
+            console.log(total);
           }
         } else {
           console.error("Topic Data retrieval failed!");
@@ -59,9 +61,9 @@ export default function Leaderboard({
       <div className="px-4 py-2">
         <p className="font-semibold text-gray-500 py-2">SUMMARY</p>
         <div className="flex flex-row justify-between">
-          <RadialChartCard parameter={"CONFIDENCE"} val={confidence}/>
-          <RadialChartCard parameter={"IMPLEMENTATION"} val={implementation}/>
-          <RadialChartCard parameter={"UNDERSTOOD"} val={understand}/>
+          <RadialChartCard parameter={"CONFIDENCE"} val={Math.floor(confidence/total)}/>
+          <RadialChartCard parameter={"IMPLEMENTATION"} val={Math.floor(implementation/total)}/>
+          <RadialChartCard parameter={"UNDERSTOOD"} val={Math.floor(understand/total)}/>
         </div>
       </div>
       <div className="px-4 py-2">
