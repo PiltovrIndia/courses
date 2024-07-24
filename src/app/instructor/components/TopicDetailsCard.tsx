@@ -31,6 +31,7 @@ export default function TopicDetailsCard({
   topicDetails: any;
 }) {
   // console.log(topicDetails[0]);
+  const [quizEnabled,setQuizEnabled] = useState(topicDetails[0].enableQuiz === 1);
   const [isMarked, setIsMarked] = useState(false);
   const [description, setDescription] = useState(
     isMarked ? topicDetails[0].description : ""
@@ -47,7 +48,8 @@ export default function TopicDetailsCard({
   } | null>(null);
   useEffect(() => {
     setIsMarked(topicDetails[0].completed === "yes");
-    setLinks(topicDetails[0].links)
+    setLinks(topicDetails[0].links);
+    setQuizEnabled(topicDetails[0].enableQuiz === 1);
     console.log(isMarked);
   }, [topicDetails]);
   useEffect(() => {
@@ -119,6 +121,7 @@ export default function TopicDetailsCard({
     }
   };
   const enableQuiz = async () => {
+    setQuizEnabled(true);
     const url = `/api/instructor/enable-quiz/${topicDetails[0].topicId}`;
     try {
       const response = await fetch(url, {
@@ -158,6 +161,7 @@ export default function TopicDetailsCard({
           <Button
             className={"bg-blue-600 hover:bg-blue-500"}
             onClick={enableQuiz}
+            disabled={quizEnabled}
           >
             Enable Quiz
           </Button>
@@ -261,9 +265,9 @@ export default function TopicDetailsCard({
           </div>
         </div>
         <Separator />
-        <div className="flex justify-center p-2">
+        {quizEnabled && <div className="flex justify-center p-2">
           <QuizStats topicId={topicDetails[0].topicId} />
-        </div>
+        </div>}
       </div>
     </Card>
   );

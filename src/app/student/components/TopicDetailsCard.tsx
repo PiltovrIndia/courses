@@ -25,7 +25,7 @@ export default function TopicDetailsCard({
   const [isExpanded, setIsExpanded] = useState(false);
   const [repoName, setRepoName] = useState("");
   const { data: session } = useSession();
-  const GitUserName = session?.user?.name;
+  const GitUserName = session?.user?.username;
   const [isCommitted, setIsCommitted] = useState(false);
   const [enableQuiz, setEnableQuiz] = useState(
     topicDetails[0].enableQuiz === 1
