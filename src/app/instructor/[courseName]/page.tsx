@@ -6,7 +6,7 @@ import { ArrowRight } from "@/components/icons/arrow-right";
 import TopicsCard from "../components/TopicsCard";
 import TopicDetailsCard from "../components/TopicDetailsCard";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export default function CourseDetails({
   params,
 }: {
@@ -21,6 +21,8 @@ export default function CourseDetails({
   const courseId = course[1];
   const [moduleData, setModuleData] = useState([]);
   const [currentModuleName, setCurrentModuleName] = useState("");
+  let moduleIds = moduleData.map((obj : any) => obj.moduleId);
+  console.log(moduleIds);
   const getModuleData = (data: any) => {
     setModuleData(data);
     console.log(data);
@@ -70,6 +72,9 @@ export default function CourseDetails({
       console.error("Error:", error);
     }
   };
+  useEffect(() => {
+    setTopicDetails([]);
+  },[moduleId])
   return (
     <div>
       <div className="flex flex-row justify-between p-4 space-x-4 space-y-3">
@@ -85,7 +90,7 @@ export default function CourseDetails({
                 `/instructor/${
                   params.courseName +
                   "@" +
-                  encodeURIComponent(JSON.stringify(moduleData))
+                  encodeURIComponent(JSON.stringify(moduleIds))
                 }/leaderboard`
               )
             }

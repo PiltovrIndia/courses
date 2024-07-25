@@ -31,7 +31,9 @@ export default function TopicDetailsCard({
   topicDetails: any;
 }) {
   // console.log(topicDetails[0]);
-  const [quizEnabled,setQuizEnabled] = useState(topicDetails[0].enableQuiz === 1);
+  const [quizEnabled, setQuizEnabled] = useState(
+    topicDetails[0].enableQuiz === 1
+  );
   const [isMarked, setIsMarked] = useState(false);
   const [description, setDescription] = useState(
     isMarked ? topicDetails[0].description : ""
@@ -80,7 +82,7 @@ export default function TopicDetailsCard({
   const handleAdd = async () => {
     const allLinks = topicDetails[0].links.split(",");
     allLinks.push(newLink);
-    setLinks(links+","+newLink);
+    setLinks(links + "," + newLink);
     const url = `/api/instructor/update-links/${
       topicDetails[0].topicId
     }/${encodeURIComponent(allLinks)}`;
@@ -169,7 +171,7 @@ export default function TopicDetailsCard({
       </div>
       <Separator />
       <div className="h-fit max-h-[63.5vh] overflow-y-auto relative">
-        {(isMarked ) && (
+        {isMarked && (
           <div>
             <div className="flex flex-row">
               <p className="px-4 py-2">TOPIC STATS</p>
@@ -180,6 +182,12 @@ export default function TopicDetailsCard({
               </p>
             </div>
             <div className="flex flex-row justify-between">
+            <div className="px-4">
+                <p className="font-semibold">UNDERSTOOD</p>
+                <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                  {feedback && Math.floor(feedback.understand)}%
+                </h2>
+              </div>
               <div className="px-4">
                 <p className="font-semibold">CONFIDENCE</p>
                 <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
@@ -190,12 +198,6 @@ export default function TopicDetailsCard({
                 <p className="font-semibold">IMPLEMENTATION</p>
                 <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
                   {feedback && Math.floor(feedback.implementation)}%
-                </h2>
-              </div>
-              <div className="px-4">
-                <p className="font-semibold">UNDERSTOOD</p>
-                <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                  {feedback && Math.floor(feedback.understand)}%
                 </h2>
               </div>
             </div>
@@ -265,9 +267,11 @@ export default function TopicDetailsCard({
           </div>
         </div>
         <Separator />
-        {quizEnabled && <div className="flex justify-center p-2">
-          <QuizStats topicId={topicDetails[0].topicId} />
-        </div>}
+        {quizEnabled && (
+          <div className="flex justify-center p-2">
+            <QuizStats topicId={topicDetails[0].topicId} />
+          </div>
+        )}
       </div>
     </Card>
   );
@@ -305,22 +309,27 @@ function QuizStats({ topicId }: { topicId: string }) {
         <Button>Quiz Stats</Button>
       </SheetTrigger>
       <SheetContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Student ID</TableHead>
-              <TableHead>Score</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {scoreData.map((item: any, index) => (
-              <TableRow key={index}>
-                <TableCell>{item.studentid}</TableCell>
-                <TableCell>{item.score}</TableCell>
+      <SheetHeader>
+          <SheetTitle>Quiz Statistics</SheetTitle>
+        </SheetHeader>
+        <div className="h-fit max-h-[92vh] overflow-y-auto relative">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Student ID</TableHead>
+                <TableHead>Score</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {scoreData.map((item: any, index) => (
+                <TableRow key={index}>
+                  <TableCell>{item.studentid}</TableCell>
+                  <TableCell>{item.score}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </SheetContent>
     </Sheet>
   );

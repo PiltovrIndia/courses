@@ -72,6 +72,9 @@ export default function TopicsCard({
   const updateTopicData = (topic: never) => {
     setTopicsData([...topicsData, topic]);
   };
+  useEffect(() => {
+    setActiveTopicId("");
+  },[moduleId])
   return (
     <div className="space-y-3">
       {
@@ -94,6 +97,13 @@ export default function TopicsCard({
                 </div>
                 <Separator />
                 <div className="flex flex-row justify-between">
+                <div className="px-4">
+                    <p className="font-semibold">UNDERSTOOD</p>
+                    <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                      {Math.floor(feedback.understand / feedback.completeCount)}
+                      %
+                    </h2>
+                  </div>
                   <div className="px-4">
                     <p className="font-semibold">CONFIDENCE</p>
                     <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
@@ -107,13 +117,6 @@ export default function TopicsCard({
                       {Math.floor(
                         feedback.implementation / feedback.completeCount
                       )}
-                      %
-                    </h2>
-                  </div>
-                  <div className="px-4">
-                    <p className="font-semibold">UNDERSTOOD</p>
-                    <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-                      {Math.floor(feedback.understand / feedback.completeCount)}
                       %
                     </h2>
                   </div>

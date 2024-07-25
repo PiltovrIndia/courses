@@ -49,12 +49,10 @@ export default function TopicDetailsCard({
       dayjs(localStorage.getItem("endDate")).format("YYYY-MM-DD") +
       "T23:59:59Z";
     const url = `https://api.github.com/repos/${GitUserName}/${repoName}/commits?since=${startDate}&until=${endDate}`;
-    // console.log(url);
     try {
       const response = await fetch(url);
 
       if (!response.ok) {
-        alert("Repo not found, verify repo name and try again!!")
         DialogMessage(
           "Not Found!",
           "Repo not found, verify repo and try again!!"
@@ -68,24 +66,20 @@ export default function TopicDetailsCard({
             return author === GitUserName;
           }
         );
-        // console.log(filteredCommits[0].commit.message);
         const reqMessage = topicDetails[0].token;
         const len = filteredCommits.length;
         if (len > 0) {
           let i = 0;
           for (i = 0; i < len; i++) {
-            // console.log(filteredCommits[i].commit.message);
             if (filteredCommits[i].commit.message === reqMessage) {
               setIsCommitted(true);
               break;
             }
           }
-          if (isCommitted) {
-            alert("Verify the commit message and try again");
+          if (!isCommitted) {
             DialogMessage("Failed", "Verify the commit message and try again");
           }
         } else {
-          alert("Please Commit with your account and Try Again")
           DialogMessage("Failed", "Please Commit and Try Again");
         }
       }
@@ -195,6 +189,8 @@ export default function TopicDetailsCard({
       topicDetails[0].links !== "" ? topicDetails[0].links.split(",") : []
     );
     setIsCommitted(false);
+    setIsExpanded(false);
+    DialogMessage("Hello","HelloWorld");
   }, [topicDetails]);
   // const openQuiz = () => {
 

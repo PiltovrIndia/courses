@@ -54,6 +54,9 @@ export default function CourseDetails({
       console.error("Error:", error);
     }
   };
+  useEffect(() => {
+    setTopicDetails([]);
+  },[moduleId])
   return (
     <div>
       <div className="flex flex-row justify-between p-4 space-x-4 space-y-3">

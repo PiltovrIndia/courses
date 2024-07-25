@@ -46,6 +46,9 @@ export default function ModuleCard({
     setActiveTopicId(id);
     currentTopicDetails(id);
   }
+  useEffect(() => {
+    setActiveTopicId("");
+  },[moduleId])
   return (
     <div className="w-96">
       <Card>
