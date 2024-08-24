@@ -22,11 +22,13 @@ export default function TopicsCard({
   courseId,
   currentTopicDetails,
   moduleName,
+  updateProgress,
 }: {
   moduleId: string;
   courseId: string;
   currentTopicDetails: any;
   moduleName: string;
+  updateProgress: any;
 }) {
   const [topicsData, setTopicsData] = useState([]);
   const [activeTopicId, setActiveTopicId] = useState("");
@@ -55,26 +57,28 @@ export default function TopicsCard({
           console.log("Topic Data retrieval successfull!", resp.data);
           const response = calModuleFeedback(resp.data);
           setFeedback(await response);
-          setTopicsData(resp.data);
+          setTopicsData(await resp.data);
         } else {
           console.error("Topic Data retrieval failed!");
         }
       } catch (error) {
         console.log("Error:", error);
       }
+      updateProgress(false);
     };
     fetchData();
   }, [moduleId]);
   const handleClick = (id: any) => {
     setActiveTopicId(id);
     currentTopicDetails(id);
+    updateProgress(false);
   };
   const updateTopicData = (topic: never) => {
     setTopicsData([...topicsData, topic]);
   };
   useEffect(() => {
     setActiveTopicId("");
-  },[moduleId])
+  }, [moduleId]);
   return (
     <div className="space-y-3">
       {
@@ -97,7 +101,7 @@ export default function TopicsCard({
                 </div>
                 <Separator />
                 <div className="flex flex-row justify-between">
-                <div className="px-4">
+                  <div className="px-4">
                     <p className="font-semibold">UNDERSTOOD</p>
                     <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
                       {Math.floor(feedback.understand / feedback.completeCount)}
@@ -130,27 +134,34 @@ export default function TopicsCard({
           {moduleName} TOPICS
         </p>
         <Separator />
-        <div className="h-fit max-h-[60vh] overflow-y-auto relative">
-          {topicsData.map((item: any, index) => (
-            <div
-              key={index}
-              className={`${
-                activeTopicId === item.topicId
-                  ? "bg-gray-100"
-                  : "hover:bg-gray-50"
-              }`}
-              onClick={() => handleClick(item.topicId)}
-            >
-              <div className="flex flex-row justify-between items-center p-2">
-                <p className="font-bold pl-4 pt-2 pb-2">{item.name}</p>
-                <CheckCircle
-                  className={item.completed === "yes" ? "text-green-500" : ""}
-                />
+        {topicsData.length !== 0 ? (
+          <div className="h-fit max-h-[60vh] overflow-y-auto relative">
+            {topicsData.map((item: any, index) => (
+              <div
+                key={index}
+                className={`${
+                  activeTopicId === item.topicId
+                    ? "bg-gray-100"
+                    : "hover:bg-gray-50"
+                }`}
+                onClick={() => handleClick(item.topicId)}
+              >
+                <div className="flex flex-row justify-between items-center p-2">
+                  <p className="font-bold pl-4 pt-2 pb-2">{item.name}</p>
+                  <CheckCircle
+                    className={item.completed === "yes" ? "text-green-500" : ""}
+                  />
+                </div>
+                <Separator />
               </div>
-              <Separator />
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            <p className="font-bold pl-4 pt-2">No Topics</p>
+            <Separator />
+          </div>
+        )}
         <div className="flex justify-center">
           <AddTopicDialog
             courseId={courseId}

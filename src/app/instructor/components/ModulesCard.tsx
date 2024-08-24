@@ -22,14 +22,16 @@ import { DialogMessage } from "@/components/dialog";
 export default function ModulesCard({
   courseId,
   currentModuleId,
-  getModuleData
+  getModuleData,
+  updateProgress,
 }: {
-  courseId: string,
-  currentModuleId: any,
-  getModuleData: any
+  courseId: string;
+  currentModuleId: any;
+  getModuleData: any;
+  updateProgress: any;
 }) {
   const [moduleData, setModuleData] = useState([]);
-  const [activeModuleId,setActiveModuleId] = useState("");
+  const [activeModuleId, setActiveModuleId] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const url = `/api/instructor/get-modules/${courseId}`;
@@ -46,6 +48,7 @@ export default function ModulesCard({
           console.log("Module Data retrieval successful!", resp.data);
           setModuleData(resp.data);
           getModuleData(resp.data);
+          updateProgress(false);
         } else {
           console.error("Module Data retrieval failed!");
         }
@@ -55,41 +58,58 @@ export default function ModulesCard({
     };
     fetchData();
   }, []);
-  const handleClick = (id: any,name:string) => {
-    currentModuleId(id,name); //to change value in page.tsx
+  const handleClick = (id: any, name: string) => {
+    currentModuleId(id, name); //to change value in page.tsx
     setActiveModuleId(id);
+    updateProgress(true);
   };
-  const updateModuleData = (module : never) => {
-    setModuleData([...moduleData,module]);
-  }
+  const updateModuleData = (module: never) => {
+    setModuleData([...moduleData, module]);
+  };
   return (
-      <Card className="w-[45vh] h-auto">
-      <p className="text-l text-muted-foreground p-4 font-semibold">
-          MODULES
-        </p>
-        <Separator />
-        <div  className="h-fit max-h-[60vh] overflow-y-auto relative">
-        {moduleData.map((item: any, index) => (
-          <div key={index} className={`${
-            activeModuleId === item.moduleId
-              ? "bg-gray-100"
-              : "hover:bg-gray-50"
-          }`}
-            onClick={() => handleClick(item.moduleId,item.name)}
-          >
-            <p className="font-bold pl-4 pt-2">{item.name}</p>
-            <p className="text-gray-400 pl-4 pb-2">{item.description}</p>
-            <Separator />
-          </div>
-        ))}
+    <Card className="w-[45vh] h-auto">
+      <p className="text-l text-muted-foreground p-4 font-semibold">MODULES</p>
+      <Separator />
+      {moduleData.length !== 0 ? (
+        <div className="h-fit max-h-[60vh] overflow-y-auto relative">
+          {moduleData.map((item: any, index) => (
+            <div
+              key={index}
+              className={`${
+                activeModuleId === item.moduleId
+                  ? "bg-gray-100"
+                  : "hover:bg-gray-50"
+              }`}
+              onClick={() => handleClick(item.moduleId, item.name)}
+            >
+              <p className="font-bold pl-4 pt-2">{item.name}</p>
+              <p className="text-gray-400 pl-4 pb-2">{item.description}</p>
+              <Separator />
+            </div>
+          ))}
         </div>
-        <div className="flex justify-center">
-          <AddModuleDialog courseId={courseId} updateModuleData={updateModuleData}/>
+      ) : (
+        <div>
+          <p className="font-bold pl-4 pt-2">No Modules</p>
+          <Separator />
         </div>
-      </Card>
+      )}
+      <div className="flex justify-center">
+        <AddModuleDialog
+          courseId={courseId}
+          updateModuleData={updateModuleData}
+        />
+      </div>
+    </Card>
   );
 }
-function AddModuleDialog({ courseId,updateModuleData }: { courseId: string, updateModuleData : any }) {
+function AddModuleDialog({
+  courseId,
+  updateModuleData,
+}: {
+  courseId: string;
+  updateModuleData: any;
+}) {
   const [moduleName, setModuleName] = useState("");
   const [moduleDesc, setModuleDesc] = useState("");
   const moduleId = GetId("m");
@@ -106,15 +126,15 @@ function AddModuleDialog({ courseId,updateModuleData }: { courseId: string, upda
         console.log("Module Added Successfully!", response);
         setModuleName("");
         setModuleDesc("");
-        DialogMessage("Success","Module Added Successfully!!");
+        DialogMessage("Success", "Module Added Successfully!!");
         updateModuleData({
-          "moduleId" : moduleId,
-          "name" : moduleName,
-          "description" : moduleDesc,
-          "courseId" : courseId
-        })
+          moduleId: moduleId,
+          name: moduleName,
+          description: moduleDesc,
+          courseId: courseId,
+        });
       } else {
-        DialogMessage("Failed :(","Could Not Add Module! Try Again!!!");
+        DialogMessage("Failed :(", "Could Not Add Module! Try Again!!!");
       }
     } catch (error) {
       console.error("Error:", error);

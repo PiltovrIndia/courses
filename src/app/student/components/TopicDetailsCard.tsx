@@ -190,7 +190,7 @@ export default function TopicDetailsCard({
     );
     setIsCommitted(false);
     setIsExpanded(false);
-    DialogMessage("Hello","HelloWorld");
+    setRepoName("");
   }, [topicDetails]);
   // const openQuiz = () => {
 

@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
+import { Progress } from "@/components/ui/progress";
 interface Question {
   id: number;
   question: string;
@@ -41,6 +41,7 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
   const [attempted, setAttempted] = useState<boolean[]>([]);
   const [timeLeft, setTimeLeft] = useState<number>(600); // Default to 10 minutes
   const [hasStarted, setHasStarted] = useState<boolean>(false);
+  const [progress, setProgress] = useState(13);
   // const [topicid, setTopicid] = useState<number>();
   const paramData = decodeURIComponent(params.courseName).split("@");
   //  console.log(paramData);
@@ -51,9 +52,6 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
   const topicName = paramData[4];
   const studentname = "John";
   useEffect(() => {
-    if (status !== "authenticated") {
-      router.push("/student");
-    }
     if (typeof window !== "undefined") {
       const storedTimeLeft = localStorage.getItem("timeLeft");
       const storedHasStarted = localStorage.getItem("hasStarted");
@@ -61,7 +59,18 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
       if (storedHasStarted === "true") setHasStarted(true);
     }
   }, []);
-
+  useEffect(() => {
+    console.log(status);
+    if (status === "unauthenticated") {
+      router.push("/student");
+    }
+    const timer1 = setTimeout(() => setProgress(66), 500);
+    const timer2 = setTimeout(() => setProgress(90), 500);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [session]);
   useEffect(() => {
     const fetchData = async () => {
       const url = `/api/student/questions/${topicid}`;
@@ -203,29 +212,44 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
       <div className="lg:w-2/3 w-full flex flex-col items-center">
         <Card className="w-full mb-4 p-4 text-center relative">
           <div className="flex items-center justify-between">
-          { score === null ?<AlertDialog>
-              <AlertDialogTrigger> <ArrowLeft />
-              <p className="pl-2">Go Back</p></AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                   once you go back your current responses will be submitted and cannot reattempt the quiz
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                    <Button onClick={() => {handleFinish(); router.back();}}>Continue</Button>
+            {score === null ? (
+              <AlertDialog>
+                <AlertDialogTrigger>
+                  {" "}
+                  <ArrowLeft />
+                  <p className="pl-2">Go Back</p>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      once you go back your current responses will be submitted
+                      and cannot reattempt the quiz
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <Button
+                        onClick={() => {
+                          handleFinish();
+                          router.back();
+                        }}
+                      >
+                        Continue
+                      </Button>
                     </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>:
-            <Button variant={"outline"} onClick={() => router.back()}>
-            <ArrowLeft />
-            <p className="pl-2">Go Back</p>
-          </Button>
-            }
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            ) : (
+              <Button variant={"outline"} onClick={() => router.back()}>
+                <ArrowLeft />
+                <p className="pl-2">Go Back</p>
+              </Button>
+            )}
             <h1 className="text-xl font-bold text-black flex-1 text-center">
               Course Name :{courseName} Topic name : {topicName}
             </h1>
@@ -242,7 +266,7 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
             <>
               <div className="flex-1 flex flex-col bg-white p-4 rounded-md shadow-lg">
                 {hasStarted ? (
-                  questions.length > 0 ? (
+                  hasStarted && questions.length > 0 ? (
                     <QuestionCard
                       question={questions[currentIndex].question}
                       options={[
@@ -261,7 +285,9 @@ export default function Quiz({ params }: { params: { courseName: string } }) {
                       }
                     />
                   ) : (
-                    <p>Loading questions...</p>
+                    <div className="flex justify-center items-center mt-60">
+                      <Progress value={progress} className="w-[20%]" />
+                    </div>
                   )
                 ) : (
                   <div className="flex flex-col justify-center items-center h-full">

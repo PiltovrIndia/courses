@@ -8,12 +8,14 @@ export default function ModuleCard({
   moduleId,
   courseId,
   currentTopicDetails,
-  moduleName
+  moduleName,
+  updateProgress
 }: {
   moduleId: string;
   courseId: string;
   currentTopicDetails : any;
   moduleName: string;
+  updateProgress: any
 }) {
   const [activeTopicId, setActiveTopicId] = useState("");
   const [topicData, setTopicData] = useState([]);
@@ -32,6 +34,7 @@ export default function ModuleCard({
         if(response.status === 200){
           console.log('Topic Data retrieval successfull!',resp.data);
           setTopicData(resp.data);
+          updateProgress(false);
         } else {
           console.error('Topic Data retrieval failed!');
         }
@@ -45,6 +48,7 @@ export default function ModuleCard({
   const handleClick = (id : any) => {
     setActiveTopicId(id);
     currentTopicDetails(id);
+    updateProgress(true);
   }
   useEffect(() => {
     setActiveTopicId("");
@@ -54,7 +58,7 @@ export default function ModuleCard({
       <Card>
         <p className="text-l text-muted-foreground p-4 font-semibold">{moduleName} TOPICS</p>
         <Separator />
-        <div  className="h-fit max-h-[60vh] overflow-y-auto relative">
+        {topicData.length !== 0 ? (<div  className="h-fit max-h-[60vh] overflow-y-auto relative">
         {topicData.map((item:any, index:any) => (
           <div key={index} className={`${
             activeTopicId === item.topicId
@@ -70,7 +74,11 @@ export default function ModuleCard({
           </div>
         ))
         }
-        </div>
+        </div>):
+           <div className="flex flex-row justify-between items-center p-2">
+           <p className="font-bold pl-4 pt-2 pb-2">No Topics</p>
+         </div> 
+        }
       </Card>
     </div>
   );

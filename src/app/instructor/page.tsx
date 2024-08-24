@@ -3,20 +3,27 @@ import { useEffect, useState } from "react";
 import AddCourseCard from "./components/AddCourseCard";
 import ViewCourseCard from "./components/ViewCourseCard";
 import { useRouter } from "next/navigation";
-
+import { Progress } from "@/components/ui/progress";
 export default function Instructor() {
   const [courseData, setCourseData] = useState([]);
+  const [progress, setProgress] = useState(13);
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
   useEffect(() => {
-    const passkey = prompt('Enter the passkey:');
-    if (passkey === 'pavanfullstack') {
+    const passkey = prompt("Enter the passkey:");
+    if (passkey === "pavanfullstack") {
       setIsAuthorized(true);
     } else {
-      router.push('/');
+      router.push("/");
     }
-},[]);
-useEffect(() => {
+    const timer1 = setTimeout(() => setProgress(66), 500);
+    const timer2 = setTimeout(() => setProgress(90), 500);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
+  useEffect(() => {
     const fetchData = async () => {
       const url = `/api/instructor/get-courses`;
       try {
@@ -54,6 +61,12 @@ useEffect(() => {
         ))}
         <AddCourseCard />
       </div>
+      { courseData.length === 0 ?
+        (<div className="flex justify-center items-center mt-60">
+          <Progress value={progress} className="w-[20%]" />
+        </div>) :
+        <div></div>
+      }
     </div>
   );
 }

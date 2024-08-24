@@ -7,33 +7,44 @@ import TopicDetailsCard from "../components/TopicDetailsCard";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { Progress } from "@/components/ui/progress";
 export default function CourseDetails({
   params,
 }: {
   params: { courseName: string };
 }) {
-  const {data : session,status} = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const course = decodeURIComponent(params.courseName).split("@");
   const [moduleId, setModuleId] = useState("");
   const [showTopics, setShowTopics] = useState(false);
   const [topicDetails, setTopicDetails] = useState([]);
   const [currentModuleName, setCurrentModuleName] = useState("");
+  const [progress, setProgress] = useState(13);
+  const [showProgress, setShowProgress] = useState(true);
   const coursename = course[0];
   const courseId = course[1];
   const collegeId = course[2];
-  useEffect(()=>{
-    console.log(session);
-    if(status !== "authenticated")
+  useEffect(() => {
+    console.log(status);
+    if (status === "unauthenticated") {
       router.push("/student");
-  },[session])
-  const currentModuleId = (id: string,name:string) => {
+    }
+    const timer1 = setTimeout(() => setProgress(66), 500);
+    const timer2 = setTimeout(() => setProgress(90), 500);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [session]);
+  const currentModuleId = (id: string, name: string) => {
     setModuleId(id);
     console.log(moduleId);
     setShowTopics(true);
     setCurrentModuleName(name);
   };
   const currentTopicDetails = async (TopicId: string) => {
+    setShowProgress(true);
     const url = `/api/instructor/get-topic-details/${TopicId}`;
     try {
       const response = await fetch(url, {
@@ -47,6 +58,7 @@ export default function CourseDetails({
       if (response.status === 200) {
         console.log("Topic Details retrieval successful!", resp.data);
         setTopicDetails(resp.data);
+        setShowProgress(false);
       } else {
         console.error("Topic Details retrieval failed!");
       }
@@ -56,7 +68,18 @@ export default function CourseDetails({
   };
   useEffect(() => {
     setTopicDetails([]);
-  },[moduleId])
+    setShowProgress(true);
+    setProgress(13);
+    const timer1 = setTimeout(() => setProgress(66), 500);
+    const timer2 = setTimeout(() => setProgress(90), 500);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [moduleId]);
+  const updateProgress = (val: boolean) => {
+    setShowProgress(val);
+  };
   return (
     <div>
       <div className="flex flex-row justify-between p-4 space-x-4 space-y-3">
@@ -81,24 +104,40 @@ export default function CourseDetails({
       </div>
       <div className="flex flex-col sm:flex-row space-x-4 px-4">
         <div>
-        <ModulesCard courseId={courseId} currentModuleId={currentModuleId} />
-        </div>
-        <div>
-        {showTopics && (
-          <TopicsCard
-            moduleId={moduleId}
+          <ModulesCard
             courseId={courseId}
-            currentTopicDetails={currentTopicDetails}
-            moduleName={currentModuleName}
+            currentModuleId={currentModuleId}
+            updateProgress={updateProgress}
           />
-        )}
         </div>
         <div>
-        {topicDetails.length !== 0 && (
-          <TopicDetailsCard topicDetails={topicDetails} collegeId={collegeId} courseName={params.courseName}/>
-        )}
+          {showTopics && (
+            <TopicsCard
+              moduleId={moduleId}
+              courseId={courseId}
+              currentTopicDetails={currentTopicDetails}
+              moduleName={currentModuleName}
+              updateProgress={updateProgress}
+            />
+          )}
+        </div>
+        <div>
+          {topicDetails.length !== 0 && (
+            <TopicDetailsCard
+              topicDetails={topicDetails}
+              collegeId={collegeId}
+              courseName={params.courseName}
+            />
+          )}
         </div>
       </div>
+      {showProgress ? (
+        <div className="flex justify-center items-center mt-60">
+          <Progress value={progress} className="w-[20%]" />
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }

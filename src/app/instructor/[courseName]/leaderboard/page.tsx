@@ -5,7 +5,7 @@ import LeaderboardTable from "../../components/LeaderboardTable";
 import RadialChartCard from "../../components/RadialChartCard";
 import { useEffect, useState } from "react";
 import { calModuleFeedback } from "../../components/TopicsCard";
-
+import { Progress } from "@/components/ui/progress";
 export default function Leaderboard({
   params,
 }: {
@@ -19,6 +19,7 @@ export default function Leaderboard({
   const [understand, setUnderstand] = useState(0);
   const [confidence, setConfidence] = useState(0);
   const [total, setTotal] = useState(0);
+  const [progress, setProgress] = useState(13);
   useEffect(() => {
     const fetchTopicData = async (i: any) => {
       const url = `/api/instructor/get-topics/${moduleIds[i]}`;
@@ -49,6 +50,12 @@ export default function Leaderboard({
       }
     };
     for (let i = 0; i < moduleIds.length; i++) fetchTopicData(i);
+    const timer1 = setTimeout(() => setProgress(66), 500);
+    const timer2 = setTimeout(() => setProgress(90), 500);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, []);
   return (
     <div>
@@ -79,6 +86,13 @@ export default function Leaderboard({
         <p className="font-semibold text-gray-500 py-2">LEADERBOARD</p>
         <LeaderboardTable />
       </div>
+      {total === 0 ? (
+        <div className="flex justify-center items-center mt-10">
+          <Progress value={progress} className="w-[20%]" />
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }

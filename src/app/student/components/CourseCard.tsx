@@ -81,7 +81,7 @@ export default function CourseCard({
     }
   }  
   useEffect(()=>{
-    console.log(session);
+    console.log(session?.user?.username);
   },[session])
     // while (status === 'loading') {
     //   await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 500ms before checking again
@@ -131,7 +131,7 @@ export default function CourseCard({
   // }, []);
   return (
     <Card className="w-[40vh]">
-      <p className="text-l text-muted-foreground p-4 font-bold">COURSE NAME</p>
+      <p className="text-l text-muted-foreground p-4 font-bold">ENROLED COURSE NAME</p>
       <div className="bg-slate-100">
         {/* <img src="https://th.bing.com/th/id/OIP.DZRbznR3P5vZwZmxWPLLGwHaDt?rs=1&pid=ImgDetMain" /> */}
         <div className="text-lg font-bold p-4 ">

@@ -7,6 +7,7 @@ import TopicsCard from "../components/TopicsCard";
 import TopicDetailsCard from "../components/TopicDetailsCard";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Progress } from "@/components/ui/progress";
 export default function CourseDetails({
   params,
 }: {
@@ -21,6 +22,8 @@ export default function CourseDetails({
   const courseId = course[1];
   const [moduleData, setModuleData] = useState([]);
   const [currentModuleName, setCurrentModuleName] = useState("");
+  const [progress, setProgress] = useState(13);
+  const [showProgress, setShowProgress] = useState(true);
   let moduleIds = moduleData.map((obj : any) => obj.moduleId);
   console.log(moduleIds);
   const getModuleData = (data: any) => {
@@ -73,8 +76,26 @@ export default function CourseDetails({
     }
   };
   useEffect(() => {
+    const timer1 = setTimeout(() => setProgress(66), 500);
+    const timer2 = setTimeout(() => setProgress(90), 500);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
+  useEffect(() => {
     setTopicDetails([]);
+    setProgress(13);
+    const timer1 = setTimeout(() => setProgress(66), 500);
+    const timer2 = setTimeout(() => setProgress(90), 500);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   },[moduleId])
+  const updateProgress = (val: boolean) => {
+    setShowProgress(val);
+  };
   return (
     <div>
       <div className="flex flex-row justify-between p-4 space-x-4 space-y-3">
@@ -116,6 +137,7 @@ export default function CourseDetails({
             courseId={courseId}
             currentModuleId={currentModuleId}
             getModuleData={getModuleData}
+            updateProgress={updateProgress}
           />
         </div>
 
@@ -126,6 +148,7 @@ export default function CourseDetails({
               moduleName={currentModuleName}
               courseId={courseId}
               currentTopicDetails={currentTopicDetails}
+              updateProgress={updateProgress}
             />
           )}
         </div>
@@ -135,6 +158,13 @@ export default function CourseDetails({
           )}
         </div>
       </div>
+      {showProgress ? (
+        <div className="flex justify-center items-center mt-60">
+          <Progress value={progress} className="w-[20%]" />
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }
