@@ -59,6 +59,7 @@ export default function HeatmapCalender({
         const color = getColorFromIntensity(intensity);
         return (
           <span
+            key={index}
             className="w-4 h-4 rounded cursor-pointer bg-gray-400"
             title={`${activityCount} commits on ${day}`}
             style={{
